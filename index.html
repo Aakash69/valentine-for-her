@@ -1,0 +1,602 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>For You 💌</title>
+  <style>
+    :root{
+      --bg1:#ffe7f1;
+      --bg2:#e7f7ff;
+      --card:#ffffffcc;
+      --ink:#1f2330;
+      --pink:#ff4d88;
+      --pink2:#ff7fb3;
+      --shadow: 0 18px 45px rgba(20, 25, 40, .15);
+      --radius: 22px;
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial;
+      color:var(--ink);
+      min-height:100vh;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      background: radial-gradient(1200px 700px at 10% 10%, var(--bg2), transparent 55%),
+                  radial-gradient(1100px 700px at 90% 10%, var(--bg1), transparent 55%),
+                  linear-gradient(135deg, #fff, #fff);
+      overflow:hidden;
+    }
+
+    /* floating hearts */
+    .heart{
+      position:absolute;
+      width:14px;height:14px;
+      transform: rotate(45deg);
+      background: rgba(255,77,136,.35);
+      border-radius: 3px;
+      filter: blur(.1px);
+      animation: floatUp var(--t) linear infinite;
+      left: var(--x);
+      bottom: -20px;
+      opacity:.8;
+    }
+    .heart:before,.heart:after{
+      content:"";
+      position:absolute;
+      width:14px;height:14px;
+      background: inherit;
+      border-radius:50%;
+    }
+    .heart:before{left:-7px;top:0}
+    .heart:after{left:0;top:-7px}
+    @keyframes floatUp{
+      0%{ transform: translateY(0) rotate(45deg) scale(var(--s)); opacity:0}
+      10%{opacity:.8}
+      100%{ transform: translateY(-110vh) rotate(45deg) scale(var(--s)); opacity:0}
+    }
+
+    .wrap{
+      width:min(920px, 92vw);
+      position:relative;
+      z-index:2;
+    }
+
+    .card{
+      background:var(--card);
+      border:1px solid rgba(255,255,255,.6);
+      box-shadow:var(--shadow);
+      border-radius:var(--radius);
+      padding:28px;
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      overflow:hidden;
+      position:relative;
+    }
+
+    .top{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:14px;
+      margin-bottom:14px;
+    }
+
+    .pill{
+      display:inline-flex;
+      gap:8px;
+      align-items:center;
+      padding:10px 14px;
+      border-radius:999px;
+      background: rgba(255, 255, 255, .75);
+      border: 1px solid rgba(255, 77, 136, .18);
+      font-size:14px;
+      user-select:none;
+    }
+
+    .tiny{
+      opacity:.75;
+      font-size:13px;
+      line-height:1.2;
+    }
+
+    .grid{
+      display:grid;
+      grid-template-columns: 1.05fr .95fr;
+      gap:18px;
+      margin-top:14px;
+    }
+    @media (max-width: 820px){
+      .grid{grid-template-columns:1fr}
+    }
+
+    .panel{
+      background: rgba(255,255,255,.72);
+      border:1px solid rgba(31,35,48,.06);
+      border-radius:18px;
+      padding:18px;
+      position:relative;
+      overflow:hidden;
+    }
+
+    .title{
+      font-size:30px;
+      letter-spacing:-.02em;
+      margin:8px 0 10px;
+    }
+    .subtitle{
+      margin:0 0 14px;
+      opacity:.82;
+      line-height:1.5;
+      font-size:15px;
+    }
+
+    .type{
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+      background: rgba(31,35,48,.06);
+      border: 1px dashed rgba(31,35,48,.18);
+      border-radius:16px;
+      padding:14px;
+      min-height:120px;
+      line-height:1.55;
+      font-size:14px;
+      white-space:pre-wrap;
+    }
+
+    .ctaRow{
+      display:flex;
+      flex-wrap:wrap;
+      gap:12px;
+      margin-top:14px;
+      align-items:center;
+    }
+    .btn{
+      border:0;
+      border-radius:14px;
+      padding:12px 14px;
+      font-weight:700;
+      cursor:pointer;
+      transition: transform .12s ease, box-shadow .12s ease, background .12s ease;
+      box-shadow: 0 10px 22px rgba(255,77,136,.18);
+      user-select:none;
+    }
+    .btn:active{transform: translateY(1px) scale(.99)}
+    .btnPrimary{
+      background: linear-gradient(135deg, var(--pink), var(--pink2));
+      color:white;
+    }
+    .btnSoft{
+      background: rgba(31,35,48,.06);
+      color: var(--ink);
+      box-shadow:none;
+      border:1px solid rgba(31,35,48,.10);
+      font-weight:650;
+    }
+    .btnGhost{
+      background: transparent;
+      color: var(--ink);
+      box-shadow:none;
+      border: 1px solid rgba(255,77,136,.35);
+    }
+
+    .divider{
+      height:1px;
+      background: rgba(31,35,48,.08);
+      margin:14px 0;
+    }
+
+    .miniList{
+      margin:0;
+      padding-left:18px;
+      font-size:14px;
+      line-height:1.6;
+      opacity:.9;
+    }
+
+    .stamp{
+      position:absolute;
+      right:-40px;
+      top:-40px;
+      width:160px;
+      height:160px;
+      border-radius: 40px;
+      background: radial-gradient(circle at 30% 30%, rgba(255,255,255,.75), rgba(255,77,136,.15));
+      transform: rotate(18deg);
+      filter: blur(.1px);
+    }
+
+    /* envelope intro */
+    .intro{
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      min-height: 220px;
+      text-align:center;
+    }
+    .envelope{
+      width:190px;height:130px;
+      position:relative;
+      cursor:pointer;
+      transform: translateY(0);
+      transition: transform .2s ease;
+      margin: 6px auto 0;
+    }
+    .envelope:hover{transform: translateY(-3px)}
+    .envBack{
+      position:absolute; inset:0;
+      border-radius:18px;
+      background: rgba(255,255,255,.85);
+      border: 1px solid rgba(255,77,136,.22);
+      box-shadow: 0 18px 40px rgba(20,25,40,.12);
+    }
+    .envFlap{
+      position:absolute; left:0; right:0; top:0;
+      height:65px;
+      background: linear-gradient(135deg, rgba(255,77,136,.22), rgba(255,127,179,.12));
+      clip-path: polygon(0 0, 100% 0, 50% 100%);
+      border-top-left-radius:18px;
+      border-top-right-radius:18px;
+    }
+    .envNote{
+      position:absolute;
+      left:14px; right:14px; bottom:14px;
+      height:62px;
+      border-radius:14px;
+      background: rgba(255, 231, 241, .85);
+      border: 1px solid rgba(255,77,136,.18);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      font-weight:800;
+      letter-spacing:-.01em;
+    }
+
+    /* result overlay */
+    .overlay{
+      position:fixed; inset:0;
+      display:none;
+      align-items:center;
+      justify-content:center;
+      padding:18px;
+      z-index:10;
+      background: rgba(15,18,25,.55);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+    }
+    .overlay.show{display:flex}
+    .modal{
+      width:min(720px, 92vw);
+      background: rgba(255,255,255,.92);
+      border-radius:22px;
+      box-shadow: 0 28px 70px rgba(0,0,0,.25);
+      padding:20px;
+      position:relative;
+    }
+    .modal h2{margin:8px 0 8px; font-size:26px}
+    .modal p{margin:0 0 14px; line-height:1.55; opacity:.9}
+    .close{
+      position:absolute;
+      right:14px; top:14px;
+      border:0; cursor:pointer;
+      width:38px;height:38px;border-radius:12px;
+      background: rgba(31,35,48,.06);
+      font-weight:900;
+    }
+
+    canvas#confetti{
+      position:fixed;
+      inset:0;
+      pointer-events:none;
+      z-index:9;
+      display:none;
+    }
+    canvas#confetti.show{display:block}
+  </style>
+</head>
+<body>
+  <canvas id="confetti"></canvas>
+
+  <!-- floating hearts -->
+  <div id="hearts"></div>
+
+  <div class="wrap">
+    <div class="card">
+      <div class="stamp" aria-hidden="true"></div>
+
+      <div class="top">
+        <div class="pill">💌 <b id="pillText">Tap the envelope</b></div>
+        <div class="tiny" id="dateText"></div>
+      </div>
+
+      <div id="intro" class="intro">
+        <div>
+          <div class="envelope" id="openEnv" role="button" tabindex="0" aria-label="Open letter">
+            <div class="envBack"></div>
+            <div class="envFlap"></div>
+            <div class="envNote">Open me 🥺</div>
+          </div>
+          <div class="tiny" style="margin-top:12px;opacity:.8">
+            I made something tiny, just for you.
+          </div>
+        </div>
+      </div>
+
+      <div id="main" style="display:none">
+        <div class="grid">
+          <div class="panel">
+            <div class="title" id="headline">Hey you. ❤️</div>
+            <p class="subtitle" id="subhead">
+              Before anything… no pressure. I just want you to feel loved.
+            </p>
+            <div class="type" id="typebox"></div>
+
+            <div class="ctaRow">
+              <button class="btn btnPrimary" id="yesBtn">Yes, I’ll be your Valentine 💘</button>
+              <button class="btn btnSoft" id="talkBtn">I’m not sure yet 🤍</button>
+              <button class="btn btnGhost" id="moreBtn">One more cute thing ✨</button>
+            </div>
+
+            <div class="divider"></div>
+            <ul class="miniList" id="miniList">
+              <li>Open this on your phone too—it’s extra cute there.</li>
+              <li>After you click a button, send me a screenshot 🥹</li>
+              <li>I’m here. Always.</li>
+            </ul>
+          </div>
+
+          <div class="panel">
+            <div class="title" style="font-size:22px;margin-top:2px">Tiny reasons I adore you</div>
+            <p class="subtitle" style="margin-bottom:10px">
+              (these are placeholders—replace with real “her-specific” lines and you’ll win instantly)
+            </p>
+            <ul class="miniList" id="reasons">
+              <li>Your voice makes my brain go quiet in the best way.</li>
+              <li>You’re strong even when you don’t feel like it.</li>
+              <li>You make small moments feel like home.</li>
+              <li>You’re my favorite person to tell good news to.</li>
+              <li>Even across miles, you still feel close.</li>
+            </ul>
+            <div class="divider"></div>
+            <div class="tiny">
+              Pro move: add 2–3 inside jokes only you two know.
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- overlay -->
+  <div class="overlay" id="overlay">
+    <div class="modal">
+      <button class="close" id="closeModal">✕</button>
+      <div id="modalContent"></div>
+      <div class="ctaRow" style="margin-top:10px">
+        <button class="btn btnPrimary" id="copyBtn">Copy message to send me 💬</button>
+        <button class="btn btnSoft" id="shareBtn">Open WhatsApp (optional)</button>
+      </div>
+      <div class="tiny" style="margin-top:10px;opacity:.7">
+        If WhatsApp doesn’t open, just copy the message and paste it.
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // ====== PERSONALIZE THESE ======
+    const HER_NAME = "your girl’s name";     // e.g. "Aanya"
+    const YOUR_NAME = "your name";           // e.g. "Aakash"
+    const YOUR_WHATSAPP_NUMBER = "";         // optional, format like "91XXXXXXXXXX" (no +)
+    // ===============================
+
+    // Set date line (local to her device)
+    const dateText = document.getElementById("dateText");
+    const now = new Date();
+    dateText.textContent = now.toLocaleDateString(undefined, { weekday:'long', year:'numeric', month:'long', day:'numeric' });
+
+    // Floating hearts generator
+    const hearts = document.getElementById("hearts");
+    for(let i=0;i<26;i++){
+      const h = document.createElement("div");
+      h.className="heart";
+      h.style.setProperty("--x", Math.floor(Math.random()*100)+"vw");
+      h.style.setProperty("--t", (6+Math.random()*8).toFixed(2)+"s");
+      h.style.setProperty("--s", (0.6+Math.random()*1.4).toFixed(2));
+      h.style.background = `rgba(255,77,136,${(0.18+Math.random()*0.35).toFixed(2)})`;
+      h.style.animationDelay = (-Math.random()*10).toFixed(2)+"s";
+      hearts.appendChild(h);
+    }
+
+    // Intro -> main
+    const intro = document.getElementById("intro");
+    const main = document.getElementById("main");
+    const openEnv = document.getElementById("openEnv");
+    const pillText = document.getElementById("pillText");
+
+    function openLetter(){
+      intro.style.display="none";
+      main.style.display="block";
+      pillText.textContent = "A little note for you";
+      document.getElementById("headline").textContent = `Hey ${HER_NAME || "you"}. ❤️`;
+      startTyping();
+    }
+    openEnv.addEventListener("click", openLetter);
+    openEnv.addEventListener("keydown", (e)=>{ if(e.key==="Enter"||e.key===" ") openLetter(); });
+
+    // Typewriter
+    const typebox = document.getElementById("typebox");
+    const messageLines = [
+      `Hi ${HER_NAME || "love"},`,
+      ``,
+      `I know things have felt a little shaky lately…`,
+      `So I didn’t want a big speech.`,
+      `I just wanted you to open something and feel this:`,
+      ``,
+      `I choose you.`,
+      `I’m proud of you.`,
+      `I care about us.`,
+      ``,
+      `So… will you be my Valentine? 💗`,
+      ``,
+      `— ${YOUR_NAME || "me"}`
+    ];
+
+    let typing = false;
+    function startTyping(){
+      if(typing) return;
+      typing = true;
+      typebox.textContent = "";
+      const full = messageLines.join("\n");
+      let i=0;
+      const speed = 22; // lower = faster
+      const tick = () => {
+        typebox.textContent = full.slice(0,i);
+        i++;
+        if(i<=full.length) setTimeout(tick, speed);
+        else typing=false;
+      };
+      tick();
+    }
+
+    // Buttons
+    const overlay = document.getElementById("overlay");
+    const modalContent = document.getElementById("modalContent");
+    const closeModal = document.getElementById("closeModal");
+    const copyBtn = document.getElementById("copyBtn");
+    const shareBtn = document.getElementById("shareBtn");
+
+    let messageToCopy = "";
+
+    function showModal(html, msg){
+      modalContent.innerHTML = html;
+      messageToCopy = msg;
+      overlay.classList.add("show");
+    }
+    function hideModal(){
+      overlay.classList.remove("show");
+    }
+    closeModal.addEventListener("click", hideModal);
+    overlay.addEventListener("click", (e)=>{ if(e.target === overlay) hideModal(); });
+
+    document.getElementById("yesBtn").addEventListener("click", ()=>{
+      fireConfetti();
+      const msg = `YES 😭💘 I’m your Valentine! Happy Valentine’s Day, ${YOUR_NAME || ""} ❤️`;
+      showModal(
+        `<h2>YAYYYYY 💘</h2>
+         <p>You just made my entire day. Screenshot this and send it to me 🥹</p>
+         <p><b>Tonight’s plan:</b> call + a cute virtual date (I’ll set it up). 🍓🎥</p>`,
+        msg
+      );
+    });
+
+    document.getElementById("talkBtn").addEventListener("click", ()=>{
+      const msg = `Hey… I saw your message. I’m not fully sure yet, but I really appreciate this. Can we talk today? 🤍`;
+      showModal(
+        `<h2>No pressure 🤍</h2>
+         <p>Thank you for being honest. I’d rather do this gently and properly.</p>
+         <p>Can we do a calm call today—no fighting, just us?</p>
+         <p style="opacity:.85">If you want, tell me what would make you feel safe with us again.</p>`,
+        msg
+      );
+    });
+
+    const cuteAddOns = [
+      "If I could, I’d teleport you your favorite snack right now.",
+      "You’re the only notification I actually want.",
+      "I’m not perfect, but I’m serious about us.",
+      "I don’t want distance to make us strangers.",
+      "I’m learning how to love you better. I mean it."
+    ];
+    document.getElementById("moreBtn").addEventListener("click", ()=>{
+      const pick = cuteAddOns[Math.floor(Math.random()*cuteAddOns.length)];
+      const msg = `One more thing: ${pick} 🤍`;
+      showModal(
+        `<h2>One more tiny thing ✨</h2>
+         <p>${pick}</p>
+         <p>Okay… I’ll stop being cheesy now. (I won’t.)</p>`,
+        msg
+      );
+    });
+
+    // Copy / WhatsApp
+    copyBtn.addEventListener("click", async ()=>{
+      try{
+        await navigator.clipboard.writeText(messageToCopy);
+        copyBtn.textContent = "Copied ✅";
+        setTimeout(()=> copyBtn.textContent="Copy message to send me 💬", 1300);
+      }catch(e){
+        alert("Couldn’t auto-copy. Just select and copy manually:\n\n" + messageToCopy);
+      }
+    });
+
+    shareBtn.addEventListener("click", ()=>{
+      const text = encodeURIComponent(messageToCopy);
+      // If you set YOUR_WHATSAPP_NUMBER, it opens chat to you; otherwise opens WhatsApp with text (user picks contact)
+      const url = YOUR_WHATSAPP_NUMBER
+        ? `https://wa.me/${YOUR_WHATSAPP_NUMBER}?text=${text}`
+        : `https://wa.me/?text=${text}`;
+      window.open(url, "_blank");
+    });
+
+    // Simple confetti (no libraries)
+    const canvas = document.getElementById("confetti");
+    const ctx = canvas.getContext("2d");
+    let confettiPieces = [];
+    function resize(){
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    }
+    window.addEventListener("resize", resize);
+    resize();
+
+    function fireConfetti(){
+      canvas.classList.add("show");
+      confettiPieces = [];
+      const count = 160;
+      for(let i=0;i<count;i++){
+        confettiPieces.push({
+          x: Math.random()*canvas.width,
+          y: -20 - Math.random()*canvas.height*0.2,
+          r: 3 + Math.random()*4,
+          vx: -2 + Math.random()*4,
+          vy: 2 + Math.random()*5,
+          rot: Math.random()*Math.PI,
+          vr: -0.1 + Math.random()*0.2,
+          life: 0,
+          max: 90 + Math.random()*50
+        });
+      }
+      let frame = 0;
+      const draw = ()=>{
+        frame++;
+        ctx.clearRect(0,0,canvas.width,canvas.height);
+        for(const p of confettiPieces){
+          p.x += p.vx;
+          p.y += p.vy;
+          p.vy += 0.03;
+          p.rot += p.vr;
+          p.life++;
+
+          ctx.save();
+          ctx.translate(p.x, p.y);
+          ctx.rotate(p.rot);
+          ctx.globalAlpha = Math.max(0, 1 - (p.life/p.max));
+          // random pastel-ish using HSL
+          const hue = 320 + Math.random()*60;
+          ctx.fillStyle = `hsla(${hue}, 90%, 70%, 1)`;
+          ctx.fillRect(-p.r, -p.r, p.r*2.4, p.r*1.4);
+          ctx.restore();
+        }
+        confettiPieces = confettiPieces.filter(p=>p.life<p.max && p.y < canvas.height+40);
+        if(confettiPieces.length && frame < 240){
+          requestAnimationFrame(draw);
+        }else{
+          canvas.classList.remove("show");
+        }
+      };
+      draw();
+    }
+  </script>
+</body>
+</html>
